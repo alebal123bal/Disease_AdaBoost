@@ -11,10 +11,10 @@ High-performance AdaBoost classifier specifically designed for medical datasets,
 - **79.20% true negative rate** (healthy classification)
 - Competitive with state-of-the-art algorithms
 
-## 📊 Datasets Tested
+## 📊 Dataset
 
 ### Pima Indians Diabetes Dataset
-- **Source**: https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv
+- **File**: `dataset/pima_indians_diabetes.csv`
 - **Features**: pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, diabetes_pedigree, age
 - **Samples**: 768 × 8 features
 - **Target**: 0=no diabetes, 1=diabetes
@@ -41,24 +41,22 @@ cd Disease_AdaBoost
 pip install numpy numba scikit-learn pandas
 ```
 
-### Run Tests
+### Run Training
 ```bash
-# Run diabetes prediction test
-python train/diabetes_classification.py
-
-# Run benchmarking
-python train/medical_benchmark.py
+# Train AdaBoost on diabetes dataset
+python train.py
 ```
 
 ## 🏗️ Project Structure
 
 ```
 Disease_AdaBoost/
-├── adaboost_smart/         # Core AdaBoost implementation (submodule)
-├── dataset/                # Medical datasets
-├── preprocess/             # Data preprocessing utilities  
-├── train/                  # Training scripts for different diseases
-├── results/                # Performance results and models
+├── adaboost_smart/               # Core AdaBoost implementation (submodule)
+├── dataset/
+│   └── pima_indians_diabetes.csv # Pima Indians diabetes dataset
+├── preprocess/
+│   └── dataset_preprocess.py     # Data preprocessing and feature engineering
+├── train.py                      # Main training script
 └── README.md
 ```
 
@@ -70,11 +68,20 @@ Disease_AdaBoost/
 - **Vectorized Operations**: Efficient NumPy array processing
 - **Memory Optimization**: Pre-allocated arrays and efficient data types
 
-### Medical Data Specializations
-- **Missing Value Handling**: Intelligent imputation for medical zeros
-- **Class Imbalance**: Weighted sampling for rare diseases
-- **Feature Scaling**: Optimized for continuous medical measurements
-- **Interpretability**: Decision stump analysis for medical insights
+### Data Preprocessing Features
+- **Missing Value Handling**: Zero values replaced with median imputation
+- **Feature Engineering**: Automatic generation of interaction features
+  - Multiplicative combinations of all feature pairs
+  - Additive combinations of all feature pairs  
+  - Sum of squared feature pairs
+- **Class Balancing**: Weighted sampling with configurable bias factor
+- **Label Conversion**: Automatic conversion from (0,1) to (-1,1) format
+
+### Training Configuration
+- **Stages**: 4 boosting stages for optimal performance
+- **Aggressiveness**: 0.15 for stable convergence
+- **Features per Stage**: 7 features selected per stage
+- **Bias Factor**: 300.0 for enhanced positive class detection
 
 ## 🩺 Medical Applications
 
@@ -82,20 +89,23 @@ Disease_AdaBoost/
 - **Use Case**: Pre-diabetes screening in primary care
 - **Performance**: 79.85% sensitivity for early detection
 - **Clinical Value**: Reduces missed diagnoses by ~15-20%
+- **Preprocessing**: Handles medical zeros as missing values
+- **Feature Engineering**: Creates medically relevant feature interactions
 
-### Future Applications (Planned)
-- Breast Cancer Detection (Wisconsin dataset)
-- Heart Disease Prediction (Cleveland dataset) 
-- General medical screening tools
+## 🔧 Training Parameters
 
-## 🔧 Configuration
+### Default Configuration
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| n_stages | 4 | Number of boosting stages |
+| aggressivness | 0.15 | Weight update aggressiveness |
+| feature_per_stage | 7 | Features selected per stage |
+| bias_factor | 300.0 | Positive class weight multiplier |
 
-### Recommended Settings by Dataset Size
-| Dataset Size | n_stages | aggressivness | Expected Time |
-|--------------|----------|---------------|---------------|
-| Small (<1K) | 6-8 | 1.0-1.2 | <1 second |
-| Medium (1K-10K) | 8-12 | 1.2-1.5 | 1-10 seconds |
-| Large (>10K) | 10-15 | 1.0-1.3 | 10-60 seconds |
+### Performance Metrics
+- Training typically completes in under 5 seconds
+- Feature matrix expanded from 8 to 100+ engineered features
+- Automatic performance evaluation with ClassifierScoreCheck
 
 ## 🤝 Contributing
 
