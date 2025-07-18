@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Preprocess",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "preprocess.dataset_preprocess",
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "Run Preprocess",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "preprocess.dataset_preprocess",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "stopOnEntry": false
+        },
+        {
+            "name": "Debug Train",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "train.train",
+            "console": "integratedTerminal",
+            "env": {
+                "ADABOOST_DEBUG": "true"
+            }
+        },
+        {
+            "name": "Run Train",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "train.train",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "stopOnEntry": false
+        }
+    ]
+}
